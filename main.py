@@ -14,15 +14,17 @@ class Main(Star):
         self.config = config
         self._lock = asyncio.Lock()
 
-    @filter.command('看本地视频')
+    @filter.command('看本地视频', priority=1300)
     async def see_local_video(self, event: AstrMessageEvent, filename: str):
         """管理员私聊分析允许目录中的本地视频：/看本地视频 文件名"""
         if not event.is_admin() or not event.is_private_chat():
             yield event.plain_result('此命令仅限管理员私聊使用。')
+            event.stop_event()
             return
         root = str(self.config.get('video_root', '')).strip()
         if not root:
             yield event.plain_result('请先在插件设置中配置允许读取的视频目录。')
+            event.stop_event()
             return
         try:
             video = resolve_video(root, filename)
@@ -33,16 +35,19 @@ class Main(Star):
             yield event.plain_result(answer)
         except (ValueError, OSError, RuntimeError, asyncio.TimeoutError):
             yield event.plain_result('视频分析失败：请检查允许目录、视频文件、Node/FFmpeg、模型支持与处理限额。Windows 请将 ffmpeg_path 指向 ffmpeg.exe。')
+        event.stop_event()
 
-    @filter.command('看视频')
+    @filter.command('看视频', priority=1300)
     async def see_attached_video(self, event: AstrMessageEvent):
         """管理员私聊：命令和一个视频附件放在同一条消息中。"""
         if not event.is_admin() or not event.is_private_chat():
             yield event.plain_result('此命令仅限管理员私聊使用。')
+            event.stop_event()
             return
         videos = [item for item in event.get_messages() if isinstance(item, Video)]
         if len(videos) != 1:
             yield event.plain_result('请在同一条消息中附带一个视频。引用和转发视频暂不支持。')
+            event.stop_event()
             return
         try:
             component = videos[0]
@@ -62,6 +67,7 @@ class Main(Star):
             yield event.plain_result(answer)
         except Exception:
             yield event.plain_result('视频分析失败：附件可能不可下载、超过限额，或视觉服务及依赖未配置。当前不跟随下载重定向；Windows 请将 ffmpeg_path 指向 ffmpeg.exe。')
+        event.stop_event()
 
     async def _analyze(self, event, video):
             provider_id = str(self.config.get('vision_provider_id', '')).strip()
