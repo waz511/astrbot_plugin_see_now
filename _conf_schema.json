@@ -1,0 +1,10 @@
+{
+  "video_root": {"description": "允许读取的本地视频目录（必填，仅管理员私聊）", "type": "string", "default": ""},
+  "vision_provider_id": {"description": "视觉模型服务 ID（留空使用当前会话模型）", "type": "string", "default": ""},
+  "node_path": {"description": "Node.js 路径", "type": "string", "default": "node"},
+  "ffmpeg_path": {"description": "FFmpeg 路径（留空使用 PATH）", "type": "string", "default": ""},
+  "max_file_mb": {"description": "视频大小上限 MB", "type": "int", "default": 500},
+  "max_seconds": {"description": "视频时长处理上限秒", "type": "int", "default": 600},
+  "max_sheets": {"description": "拼图上限", "type": "int", "default": 20},
+  "timeout_seconds": {"description": "处理和模型调用超时秒", "type": "int", "default": 300}
+}

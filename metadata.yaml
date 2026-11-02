@@ -1,0 +1,6 @@
+name: astrbot_plugin_see_now
+display_name: See Now 视频分析
+desc: 使用 dsh-see-now 的画面变化筛帧和拼图分析视频。
+version: v0.1.0
+author: waz511
+repo: https://github.com/waz511/astrbot_plugin_see_now
